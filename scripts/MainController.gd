@@ -13,6 +13,8 @@ var ui = null  # Will be created in _ready
 
 var camera_rotation: Vector2 = Vector2.ZERO
 var mouse_captured: bool = false
+var is_orthographic: bool = false
+var is_wireframe: bool = false
 
 func _ready() -> void:
 	setup_scene()
@@ -74,6 +76,11 @@ func connect_signals() -> void:
 		ui.heightmap_selected.connect(_on_heightmap_selected)
 		ui.test_heightmap_requested.connect(_on_test_heightmap_requested)
 		ui.settings_changed.connect(_on_settings_changed)
+		ui.top_down_view_requested.connect(_on_top_down_view_requested)
+		ui.perspective_view_requested.connect(_on_perspective_view_requested)
+		ui.wireframe_view_requested.connect(_on_wireframe_view_requested)
+		ui.solid_view_requested.connect(_on_solid_view_requested)
+		ui.bake_heightmap_requested.connect(_on_bake_heightmap_requested)
 	
 	if heightmap_loader:
 		heightmap_loader.heightmap_loaded.connect(_on_heightmap_loaded)
@@ -96,16 +103,29 @@ func _on_test_heightmap_requested() -> void:
 func _on_heightmap_loaded(image: Image) -> void:
 	print("[MainController] Heightmap loaded signal received")
 	if image:
+		# Show thumbnail in UI
+		if ui:
+			ui.show_heightmap_preview(image)
+		
 		terrain_manager.load_heightmap_from_image(image)
 	else:
 		push_error("[MainController] Received null image in heightmap_loaded signal")
 	
-	var terrain_size = terrain_manager.get_terrain_size()
-	camera_controller.position = Vector3(
-		terrain_size.x * 0.5,
-		30,
-		terrain_size.y * 0.5 + terrain_size.y * 0.3
-	)
+	print("[MainController] Terrain loaded - positioning camera for centered 512x512 terrain")
+	
+	# Terrain is now always centered at (0,0,0) and extends 512 units in each direction
+	# Position camera to see the centered terrain
+	var camera_x = 200  # Offset from center
+	var camera_z = 200  # Offset from center  
+	var camera_y = 100  # Height to see terrain
+	
+	camera_controller.position = Vector3(camera_x, camera_y, camera_z)
+	# Look at terrain center (always at origin)
+	var look_target = Vector3(0, 0, 0)
+	camera_controller.look_at(look_target, Vector3.UP)
+	
+	print("[MainController] Positioned camera at: ", camera_controller.position)
+	print("[MainController] Looking at terrain center: ", look_target)
 
 func _on_loading_failed(error_message: String) -> void:
 	push_error(error_message)
@@ -140,6 +160,10 @@ func _input(event: InputEvent) -> void:
 
 func _process(delta: float) -> void:
 	handle_camera_movement(delta)
+	
+	# Debug: Press T to teleport camera to terrain center
+	if Input.is_action_just_pressed("ui_accept") or Input.is_key_pressed(KEY_T):
+		teleport_to_terrain()
 
 func handle_camera_movement(delta: float) -> void:
 	if not camera_controller:
@@ -170,3 +194,162 @@ func handle_camera_movement(delta: float) -> void:
 			speed *= 2.0
 		
 		camera_controller.position += movement * speed * delta
+
+func teleport_to_terrain():
+	if terrain_manager and terrain_manager.terrain_chunks.size() > 0:
+		# Find a chunk with height variation
+		var best_chunk = null
+		var best_height_range = 0.0
+		
+		for chunk in terrain_manager.terrain_chunks:
+			# This is a simple heuristic - we could add a height_range property to chunks
+			# For now, just use any chunk that's not at origin
+			if chunk.chunk_x > 0 or chunk.chunk_z > 0:
+				best_chunk = chunk
+				break
+		
+		if not best_chunk:
+			best_chunk = terrain_manager.terrain_chunks[0]  # Fallback to first chunk
+		
+		# Position camera above the selected chunk
+		var chunk_world_pos = best_chunk.position
+		camera_controller.position = Vector3(
+			chunk_world_pos.x + 16,  # Center of chunk + offset
+			25,  # Height above terrain
+			chunk_world_pos.z + 50   # Behind the chunk to look at it
+		)
+		camera_controller.look_at(Vector3(chunk_world_pos.x + 16, 0, chunk_world_pos.z + 16), Vector3.UP)
+		
+		print("[MainController] Teleported to terrain chunk at: ", chunk_world_pos)
+		print("[MainController] Camera position: ", camera_controller.position)
+
+func _on_top_down_view_requested() -> void:
+	if not camera_3d:
+		return
+	
+	# Switch to orthographic projection
+	camera_3d.projection = Camera3D.PROJECTION_ORTHOGONAL
+	is_orthographic = true
+	
+	# Position camera above terrain center (origin) looking down
+	var camera_height = 400.0  # High enough to see all 512x512 terrain
+	
+	camera_controller.position = Vector3(0, camera_height, 0)
+	camera_controller.rotation = Vector3(deg_to_rad(-90), 0, 0)  # Look straight down
+	camera_rotation = Vector2.ZERO
+	
+	# Set orthographic size to fit 512x512 terrain with some padding
+	camera_3d.size = 600.0
+	
+	print("[MainController] Switched to orthographic top-down view")
+	print("[MainController] Camera height: ", camera_height, " Size: ", camera_3d.size)
+
+func _on_perspective_view_requested() -> void:
+	if not camera_3d:
+		return
+	
+	# Switch back to perspective projection
+	camera_3d.projection = Camera3D.PROJECTION_PERSPECTIVE
+	is_orthographic = false
+	
+	# Reset to perspective view position - terrain centered at origin
+	camera_controller.position = Vector3(200, 100, 200)
+	camera_controller.look_at(Vector3(0, 0, 0), Vector3.UP)
+	
+	camera_rotation = Vector2.ZERO
+	
+	print("[MainController] Switched to perspective view")
+
+func _on_wireframe_view_requested() -> void:
+	is_wireframe = true
+	apply_wireframe_to_terrain()
+	print("[MainController] Switched to wireframe view")
+
+func _on_solid_view_requested() -> void:
+	is_wireframe = false
+	apply_wireframe_to_terrain()
+	print("[MainController] Switched to solid view")
+
+func apply_wireframe_to_terrain() -> void:
+	if not terrain_manager:
+		return
+	
+	for chunk in terrain_manager.terrain_chunks:
+		if chunk and chunk.get_surface_override_material_count() > 0:
+			var material = chunk.get_surface_override_material(0) as StandardMaterial3D
+			if material:
+				if is_wireframe:
+					material.flags_use_point_size = true
+					material.flags_wireframe = true
+					material.albedo_color = Color.WHITE
+				else:
+					material.flags_wireframe = false
+					material.albedo_color = Color(0.3, 0.5, 0.2)
+
+func _on_bake_heightmap_requested() -> void:
+	if not terrain_manager or not camera_3d:
+		push_error("[MainController] Cannot bake - terrain or camera not ready")
+		return
+	
+	print("[MainController] Starting heightmap bake...")
+	
+	# Switch to top-down orthographic view for baking
+	var was_ortho = is_orthographic
+	if not is_orthographic:
+		_on_top_down_view_requested()
+	
+	# Wait a frame for camera to update, then capture
+	await get_tree().process_frame
+	
+	# Create viewport for baking
+	var bake_size = 1024
+	var viewport = SubViewport.new()
+	viewport.size = Vector2i(bake_size, bake_size)
+	viewport.render_target_update_mode = SubViewport.UPDATE_ONCE
+	
+	# Create camera for baking
+	var bake_camera = Camera3D.new()
+	bake_camera.projection = Camera3D.PROJECTION_ORTHOGONAL
+	
+	# Position camera same as current top-down view - terrain centered at origin
+	bake_camera.position = Vector3(0, 400, 0)
+	bake_camera.rotation = Vector3(deg_to_rad(-90), 0, 0)
+	bake_camera.size = 600.0
+	
+	# Add viewport and camera to scene temporarily
+	add_child(viewport)
+	viewport.add_child(bake_camera)
+	
+	# Copy terrain to viewport (simplified - just render the same terrain)
+	# In a more complex setup, you'd clone the terrain nodes
+	
+	# Render and capture
+	viewport.render_target_update_mode = SubViewport.UPDATE_ONCE
+	await get_tree().process_frame
+	await get_tree().process_frame
+	
+	# Get the rendered image
+	var image = viewport.get_texture().get_image()
+	
+	# Save the baked heightmap
+	var timestamp = Time.get_unix_time_from_system()
+	var filename = "baked_heightmap_" + str(timestamp) + ".png"
+	var save_path = "user://" + filename
+	
+	var error = image.save_png(save_path)
+	
+	# Cleanup
+	viewport.queue_free()
+	
+	if error == OK:
+		print("[MainController] Heightmap baked successfully: ", save_path)
+		if ui:
+			ui.update_status("Heightmap baked: " + filename)
+	else:
+		push_error("[MainController] Failed to save baked heightmap")
+		if ui:
+			ui.update_status("Baking failed")
+	
+	# Restore previous camera state if needed
+	if not was_ortho:
+		_on_perspective_view_requested()

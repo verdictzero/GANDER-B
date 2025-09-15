@@ -1,10 +1,13 @@
 class_name TerrainManager
 extends Node3D
 
-@export var chunk_size: int = 32
+@export var chunk_size: int = 64
 @export var vertex_spacing: float = 1.0
 @export var height_scale: float = 10.0
-@export var chunks_per_side: int = 4
+@export var chunks_per_side: int = 8  # 8x8 chunks of 64x64 units = 512x512 total
+
+# Fixed terrain dimensions - always 512x512 units centered at origin
+const TERRAIN_SIZE: float = 512.0
 
 var heightmap_image: Image
 var terrain_chunks: Array[TerrainChunk] = []
@@ -29,10 +32,18 @@ func load_heightmap_from_image(image: Image) -> void:
 	generate_terrain()
 
 func clear_terrain() -> void:
+	print("[TerrainManager] Clearing existing terrain...")
 	for chunk in terrain_chunks:
 		if chunk:
 			chunk.queue_free()
 	terrain_chunks.clear()
+	
+	# Also remove any orphaned chunk nodes
+	for child in get_children():
+		if child is TerrainChunk:
+			child.queue_free()
+	
+	print("[TerrainManager] Terrain cleared")
 
 func generate_terrain() -> void:
 	if not heightmap_image:
@@ -41,41 +52,43 @@ func generate_terrain() -> void:
 	
 	print("[TerrainManager] Generating terrain...")
 	print("  Heightmap size: ", heightmap_image.get_size())
+	print("  Fixed terrain size: ", TERRAIN_SIZE, "x", TERRAIN_SIZE, " units")
 	print("  Chunk size: ", chunk_size)
 	print("  Chunks per side: ", chunks_per_side)
 	
-	var total_chunks_x = ceili(float(heightmap_image.get_width()) / float(chunk_size))
-	var total_chunks_z = ceili(float(heightmap_image.get_height()) / float(chunk_size))
+	# Calculate vertex spacing to fit exactly in 512x512 area
+	# With 8x8 chunks of 64 vertices each, we get vertex_spacing = 1.0
+	vertex_spacing = TERRAIN_SIZE / (chunks_per_side * chunk_size)
 	
-	total_chunks_x = min(total_chunks_x, chunks_per_side)
-	total_chunks_z = min(total_chunks_z, chunks_per_side)
+	print("  Calculated vertex spacing: ", vertex_spacing)
+	print("  Creating ", chunks_per_side, "x", chunks_per_side, " chunks")
 	
-	print("  Creating ", total_chunks_x, "x", total_chunks_z, " chunks")
+	# Calculate offset to center terrain at origin
+	var terrain_offset = -TERRAIN_SIZE * 0.5
 	
-	for z in range(total_chunks_z):
-		for x in range(total_chunks_x):
+	for z in range(chunks_per_side):
+		for x in range(chunks_per_side):
 			var chunk = TerrainChunk.new()
 			add_child(chunk)
 			
 			chunk.initialize(x, z, chunk_size, vertex_spacing, heightmap_image, height_scale)
-			chunk.position = Vector3(
-				x * chunk_size * vertex_spacing,
-				0,
-				z * chunk_size * vertex_spacing
-			)
+			
+			# Position chunks centered at origin
+			var chunk_world_x = terrain_offset + (x * chunk_size * vertex_spacing)
+			var chunk_world_z = terrain_offset + (z * chunk_size * vertex_spacing)
+			chunk.position = Vector3(chunk_world_x, 0, chunk_world_z)
+			
+			if x < 3 and z < 3:  # Only print first few for brevity
+				print("  Chunk (", x, ",", z, ") positioned at: ", chunk.position)
 			
 			terrain_chunks.append(chunk)
 	
 	print("[TerrainManager] Terrain generation complete. Created ", terrain_chunks.size(), " chunks")
+	print("[TerrainManager] Terrain bounds: ", terrain_offset, " to ", -terrain_offset, " (centered at origin)")
 
 func get_terrain_size() -> Vector2:
-	if not heightmap_image:
-		return Vector2.ZERO
-	
-	return Vector2(
-		heightmap_image.get_width() * vertex_spacing,
-		heightmap_image.get_height() * vertex_spacing
-	)
+	# Always return fixed terrain size
+	return Vector2(TERRAIN_SIZE, TERRAIN_SIZE)
 
 func get_height_at_world_position(world_pos: Vector3) -> float:
 	if not heightmap_image:

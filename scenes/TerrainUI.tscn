@@ -113,6 +113,45 @@ autowrap_mode = 2
 [node name="HSeparator4" type="HSeparator" parent="ControlPanel/VBoxContainer"]
 layout_mode = 2
 
+[node name="HeightmapPreview" type="TextureRect" parent="ControlPanel/VBoxContainer"]
+layout_mode = 2
+custom_minimum_size = Vector2(280, 140)
+expand_mode = 1
+stretch_mode = 5
+
+[node name="ViewContainer" type="HBoxContainer" parent="ControlPanel/VBoxContainer"]
+layout_mode = 2
+
+[node name="TopDownButton" type="Button" parent="ControlPanel/VBoxContainer/ViewContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Top-Down View"
+
+[node name="PerspectiveButton" type="Button" parent="ControlPanel/VBoxContainer/ViewContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Perspective View"
+
+[node name="RenderContainer" type="HBoxContainer" parent="ControlPanel/VBoxContainer"]
+layout_mode = 2
+
+[node name="WireframeButton" type="Button" parent="ControlPanel/VBoxContainer/RenderContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Wireframe"
+
+[node name="SolidButton" type="Button" parent="ControlPanel/VBoxContainer/RenderContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Solid"
+
+[node name="BakeButton" type="Button" parent="ControlPanel/VBoxContainer"]
+layout_mode = 2
+text = "Bake Top-Down Heightmap"
+
+[node name="HSeparator5" type="HSeparator" parent="ControlPanel/VBoxContainer"]
+layout_mode = 2
+
 [node name="ControlsLabel" type="Label" parent="ControlPanel/VBoxContainer"]
 layout_mode = 2
 text = "Camera Controls:"

@@ -4,6 +4,11 @@ extends Control
 signal heightmap_selected(path: String)
 signal test_heightmap_requested()
 signal settings_changed(chunk_size: int, height_scale: float, chunks_per_side: int)
+signal top_down_view_requested()
+signal perspective_view_requested()
+signal wireframe_view_requested()
+signal solid_view_requested()
+signal bake_heightmap_requested()
 
 @onready var file_dialog: FileDialog = $FileDialog
 @onready var control_panel: Panel = $ControlPanel
@@ -16,6 +21,12 @@ signal settings_changed(chunk_size: int, height_scale: float, chunks_per_side: i
 @onready var height_scale_label: Label = $ControlPanel/VBoxContainer/HeightScaleContainer/HeightScaleLabel
 @onready var chunks_slider: HSlider = $ControlPanel/VBoxContainer/ChunksContainer/ChunksSlider
 @onready var chunks_label: Label = $ControlPanel/VBoxContainer/ChunksContainer/ChunksLabel
+@onready var heightmap_preview: TextureRect = $ControlPanel/VBoxContainer/HeightmapPreview
+@onready var top_down_button: Button = $ControlPanel/VBoxContainer/ViewContainer/TopDownButton
+@onready var perspective_button: Button = $ControlPanel/VBoxContainer/ViewContainer/PerspectiveButton
+@onready var wireframe_button: Button = $ControlPanel/VBoxContainer/RenderContainer/WireframeButton
+@onready var solid_button: Button = $ControlPanel/VBoxContainer/RenderContainer/SolidButton
+@onready var bake_button: Button = $ControlPanel/VBoxContainer/BakeButton
 
 func _ready() -> void:
 	setup_ui()
@@ -81,6 +92,21 @@ func connect_signals() -> void:
 	
 	if chunks_slider:
 		chunks_slider.value_changed.connect(_on_chunks_changed)
+	
+	if top_down_button:
+		top_down_button.pressed.connect(_on_top_down_button_pressed)
+	
+	if perspective_button:
+		perspective_button.pressed.connect(_on_perspective_button_pressed)
+	
+	if wireframe_button:
+		wireframe_button.pressed.connect(_on_wireframe_button_pressed)
+	
+	if solid_button:
+		solid_button.pressed.connect(_on_solid_button_pressed)
+	
+	if bake_button:
+		bake_button.pressed.connect(_on_bake_button_pressed)
 
 func _on_load_button_pressed() -> void:
 	file_dialog.popup()
@@ -130,3 +156,39 @@ func update_chunks_label(value: int) -> void:
 func update_status(message: String) -> void:
 	if status_label:
 		status_label.text = message
+
+func _on_top_down_button_pressed() -> void:
+	top_down_view_requested.emit()
+
+func _on_perspective_button_pressed() -> void:
+	perspective_view_requested.emit()
+
+func _on_wireframe_button_pressed() -> void:
+	wireframe_view_requested.emit()
+
+func _on_solid_button_pressed() -> void:
+	solid_view_requested.emit()
+
+func _on_bake_button_pressed() -> void:
+	bake_heightmap_requested.emit()
+	update_status("Baking heightmap...")
+
+func show_heightmap_preview(image: Image) -> void:
+	if heightmap_preview and image:
+		# Create a scaled down version for thumbnail
+		var thumbnail_size = 256
+		var preview_image = image.duplicate()
+		
+		# Scale the image to fit thumbnail while maintaining aspect ratio
+		var original_size = preview_image.get_size()
+		var scale_factor = min(float(thumbnail_size) / original_size.x, float(thumbnail_size) / original_size.y)
+		var new_width = int(original_size.x * scale_factor)
+		var new_height = int(original_size.y * scale_factor)
+		
+		preview_image.resize(new_width, new_height, Image.INTERPOLATE_LANCZOS)
+		
+		# Create texture from image
+		var texture = ImageTexture.create_from_image(preview_image)
+		heightmap_preview.texture = texture
+		
+		print("[TerrainUI] Updated heightmap preview: ", new_width, "x", new_height)
