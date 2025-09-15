@@ -1,6 +1,15 @@
-[gd_scene load_steps=2 format=3 uid="uid://di3w4q6s3bmb1"]
+[gd_scene load_steps=5 format=3 uid="uid://di3w4q6s3bmb1"]
 
 [ext_resource type="Script" uid="uid://p5xugxsyijw0" path="res://scripts/MainController.gd" id="1"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_elqb8"]
+
+[sub_resource type="Sky" id="Sky_rvslj"]
+sky_material = SubResource("ProceduralSkyMaterial_elqb8")
+
+[sub_resource type="Environment" id="Environment_0bbpv"]
+background_mode = 2
+sky = SubResource("Sky_rvslj")
 
 [node name="Main" type="Node3D"]
 script = ExtResource("1")
@@ -20,3 +29,6 @@ far = 1000.0
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(0.707107, -0.5, 0.5, 0, 0.707107, 0.707107, -0.707107, -0.5, 0.5, 0, 0, 0)
 shadow_enabled = true
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_0bbpv")

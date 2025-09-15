@@ -81,6 +81,7 @@ func connect_signals() -> void:
 		ui.wireframe_view_requested.connect(_on_wireframe_view_requested)
 		ui.solid_view_requested.connect(_on_solid_view_requested)
 		ui.bake_heightmap_requested.connect(_on_bake_heightmap_requested)
+		ui.project_image_requested.connect(_on_project_image_requested)
 	
 	if heightmap_loader:
 		heightmap_loader.heightmap_loaded.connect(_on_heightmap_loaded)
@@ -88,28 +89,36 @@ func connect_signals() -> void:
 
 func _on_heightmap_selected(path: String) -> void:
 	print("[MainController] User selected heightmap: ", path)
+	log_activity("Loading heightmap: " + path.get_file())
 	var result = heightmap_loader.load_heightmap_from_file_dialog(path)
 	if not result:
 		push_error("[MainController] Failed to load heightmap")
+		log_activity("❌ Failed to load heightmap")
 
 func _on_test_heightmap_requested() -> void:
 	print("[MainController] Generating test heightmap...")
+	log_activity("Generating test heightmap...")
 	var test_image = heightmap_loader.create_test_heightmap(128, 128)
 	if test_image:
 		terrain_manager.load_heightmap_from_image(test_image)
+		log_activity("✅ Test heightmap generated successfully")
 	else:
 		push_error("[MainController] Failed to create test heightmap")
+		log_activity("❌ Failed to create test heightmap")
 
 func _on_heightmap_loaded(image: Image) -> void:
 	print("[MainController] Heightmap loaded signal received")
 	if image:
+		log_activity("✅ Heightmap loaded: " + str(image.get_size()))
 		# Show thumbnail in UI
 		if ui:
 			ui.show_heightmap_preview(image)
 		
 		terrain_manager.load_heightmap_from_image(image)
+		log_activity("🌄 Terrain generated successfully")
 	else:
 		push_error("[MainController] Received null image in heightmap_loaded signal")
+		log_activity("❌ Failed to load heightmap image")
 	
 	print("[MainController] Terrain loaded - positioning camera for centered 512x512 terrain")
 	
@@ -241,6 +250,7 @@ func _on_top_down_view_requested() -> void:
 	# Set orthographic size to fit 512x512 terrain with some padding
 	camera_3d.size = 600.0
 	
+	log_activity("📷 Switched to orthographic top-down view")
 	print("[MainController] Switched to orthographic top-down view")
 	print("[MainController] Camera height: ", camera_height, " Size: ", camera_3d.size)
 
@@ -258,16 +268,19 @@ func _on_perspective_view_requested() -> void:
 	
 	camera_rotation = Vector2.ZERO
 	
+	log_activity("📷 Switched to perspective view")
 	print("[MainController] Switched to perspective view")
 
 func _on_wireframe_view_requested() -> void:
 	is_wireframe = true
 	apply_wireframe_to_terrain()
+	log_activity("🔲 Switched to wireframe view")
 	print("[MainController] Switched to wireframe view")
 
 func _on_solid_view_requested() -> void:
 	is_wireframe = false
 	apply_wireframe_to_terrain()
+	log_activity("🟩 Switched to solid view")
 	print("[MainController] Switched to solid view")
 
 func apply_wireframe_to_terrain() -> void:
@@ -353,3 +366,71 @@ func _on_bake_heightmap_requested() -> void:
 	# Restore previous camera state if needed
 	if not was_ortho:
 		_on_perspective_view_requested()
+
+func _on_project_image_requested(image_path: String) -> void:
+	if not terrain_manager or not camera_3d:
+		push_error("[MainController] Cannot project image - terrain or camera not ready")
+		log_activity("❌ Cannot project image - terrain not ready")
+		return
+	
+	log_activity("Loading projection image: " + image_path.get_file())
+	
+	# Load the image to project
+	var projection_image = Image.new()
+	var error = projection_image.load(image_path)
+	
+	if error != OK:
+		push_error("[MainController] Failed to load projection image: " + image_path)
+		log_activity("❌ Failed to load projection image")
+		return
+	
+	# Validate 1:1 aspect ratio
+	var image_size = projection_image.get_size()
+	if image_size.x != image_size.y:
+		push_error("[MainController] Image must have 1:1 aspect ratio (square). Current: " + str(image_size.x) + "x" + str(image_size.y))
+		log_activity("❌ Image must be square (1:1 aspect ratio). Current: " + str(image_size.x) + "x" + str(image_size.y))
+		if ui:
+			ui.update_status("Error: Image must be square (1:1 aspect ratio)")
+		return
+	
+	log_activity("✅ Square image loaded (" + str(image_size.x) + "x" + str(image_size.y) + "), starting projection...")
+	
+	# Switch to top-down orthographic view for projection
+	var was_ortho = is_orthographic
+	if not is_orthographic:
+		_on_top_down_view_requested()
+		log_activity("📷 Switched to orthographic view")
+	
+	await get_tree().process_frame
+	
+	log_activity("🎨 Applying image projection to terrain...")
+	
+	# Apply the image to all terrain chunks
+	# Since the UV coordinates in TerrainChunk already map properly to the full terrain,
+	# we can use the same material for all chunks
+	var projection_material = StandardMaterial3D.new()
+	var image_texture = ImageTexture.create_from_image(projection_image)
+	projection_material.albedo_texture = image_texture
+	projection_material.flags_transparent = false
+	projection_material.cull_mode = BaseMaterial3D.CULL_DISABLED
+	
+	# Apply to all chunks - the UV coordinates should already be correctly mapped
+	for chunk in terrain_manager.terrain_chunks:
+		if chunk:
+			chunk.set_surface_override_material(0, projection_material)
+	
+	log_activity("✅ Image projected onto terrain successfully")
+	
+	# Update UI status
+	if ui:
+		ui.update_status("Image projected: " + image_path.get_file())
+	
+	# Restore previous camera state if needed
+	if not was_ortho:
+		await get_tree().create_timer(2.0).timeout  # Give user time to see result
+		_on_perspective_view_requested()
+		log_activity("📷 Returned to perspective view")
+
+func log_activity(message: String) -> void:
+	if ui:
+		ui.log_activity(message)

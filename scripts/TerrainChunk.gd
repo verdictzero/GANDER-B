@@ -51,9 +51,11 @@ func generate_mesh() -> void:
 			
 			vertices.append(Vector3(x * vertex_spacing, height, z * vertex_spacing))
 			
-			# UV coordinates should map across the entire heightmap
-			var u = float(heightmap_x) / float(heightmap_data.get_width() - 1)
-			var v = float(heightmap_z) / float(heightmap_data.get_height() - 1)
+			# UV coordinates should map across the entire terrain (512x512)
+			# Each chunk represents a portion of the full terrain
+			var total_terrain_vertices = 8 * 64  # chunks_per_side * chunk_size
+			var u = float(heightmap_x) / float(total_terrain_vertices - 1)
+			var v = float(heightmap_z) / float(total_terrain_vertices - 1)
 			uvs.append(Vector2(u, v))
 			
 			normals.append(calculate_normal(heightmap_x, heightmap_z))

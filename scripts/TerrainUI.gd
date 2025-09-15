@@ -9,6 +9,7 @@ signal perspective_view_requested()
 signal wireframe_view_requested()
 signal solid_view_requested()
 signal bake_heightmap_requested()
+signal project_image_requested(image_path: String)
 
 @onready var file_dialog: FileDialog = $FileDialog
 @onready var control_panel: Panel = $ControlPanel
@@ -27,6 +28,12 @@ signal bake_heightmap_requested()
 @onready var wireframe_button: Button = $ControlPanel/VBoxContainer/RenderContainer/WireframeButton
 @onready var solid_button: Button = $ControlPanel/VBoxContainer/RenderContainer/SolidButton
 @onready var bake_button: Button = $ControlPanel/VBoxContainer/BakeButton
+@onready var activity_toggle: Button = $ControlPanel/VBoxContainer/ActivityToggle
+@onready var activity_panel: Panel = $ActivityPanel
+@onready var activity_log: ScrollContainer = $ActivityPanel/VBoxContainer/ActivityLog
+@onready var activity_text: RichTextLabel = $ActivityPanel/VBoxContainer/ActivityLog/ActivityText
+@onready var activity_close_button: Button = $ActivityPanel/VBoxContainer/CloseButton
+@onready var projection_dialog: FileDialog = $ProjectionDialog
 
 func _ready() -> void:
 	setup_ui()
@@ -107,6 +114,15 @@ func connect_signals() -> void:
 	
 	if bake_button:
 		bake_button.pressed.connect(_on_bake_button_pressed)
+	
+	if activity_toggle:
+		activity_toggle.pressed.connect(_on_activity_toggle_pressed)
+	
+	if activity_close_button:
+		activity_close_button.pressed.connect(_on_activity_close_pressed)
+	
+	if projection_dialog:
+		projection_dialog.file_selected.connect(_on_projection_file_selected)
 
 func _on_load_button_pressed() -> void:
 	file_dialog.popup()
@@ -170,8 +186,24 @@ func _on_solid_button_pressed() -> void:
 	solid_view_requested.emit()
 
 func _on_bake_button_pressed() -> void:
-	bake_heightmap_requested.emit()
-	update_status("Baking heightmap...")
+	log_activity("Opening image selection for projection...")
+	projection_dialog.popup()
+
+func _on_projection_file_selected(path: String) -> void:
+	project_image_requested.emit(path)
+	log_activity("Selected image for projection: " + path.get_file())
+
+func _on_activity_toggle_pressed() -> void:
+	if activity_panel.visible:
+		activity_panel.hide()
+		activity_toggle.text = "▶ Show Activity Log"
+	else:
+		activity_panel.show()
+		activity_toggle.text = "◀ Hide Activity Log"
+
+func _on_activity_close_pressed() -> void:
+	activity_panel.hide()
+	activity_toggle.text = "▶ Show Activity Log"
 
 func show_heightmap_preview(image: Image) -> void:
 	if heightmap_preview and image:
@@ -192,3 +224,26 @@ func show_heightmap_preview(image: Image) -> void:
 		heightmap_preview.texture = texture
 		
 		print("[TerrainUI] Updated heightmap preview: ", new_width, "x", new_height)
+
+func log_activity(message: String) -> void:
+	if not activity_text:
+		return
+	
+	var timestamp = Time.get_datetime_string_from_system().split("T")[1].split(".")[0]
+	var formatted_message = "[color=cyan][" + timestamp + "][/color] " + message
+	
+	# Get current text and add new message
+	var current_text = activity_text.get_parsed_text()
+	if current_text.contains("Activity log will appear here..."):
+		activity_text.text = formatted_message
+	else:
+		activity_text.text += "\n" + formatted_message
+	
+	# Auto-scroll to bottom
+	if activity_panel.visible:
+		await get_tree().process_frame
+		activity_log.scroll_vertical = activity_log.get_v_scroll_bar().max_value
+
+func clear_activity_log() -> void:
+	if activity_text:
+		activity_text.text = "[color=gray]Activity log cleared...[/color]"
