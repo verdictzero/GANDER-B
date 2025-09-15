@@ -1,0 +1,28 @@
+{
+  "simulation_parameters": {
+    "max_entities": 100,
+    "spawn_rate": 0.0,
+    "update_rate": 30.0,
+    "broadcast_rate": 2.0,
+    "zmq_port": 5555
+  },
+  "entity_database": {
+    "path": "/home/evans/__entity_sync/entity_sync.json",
+    "count": 14
+  },
+  "terrain_boundaries": {
+    "path": "/home/evans/__terrain_sync/terrain_boundaries.json",
+    "bounds": {
+      "min_x": -2048.0,
+      "max_x": 2048.0,
+      "min_z": -2048.0,
+      "max_z": 2048.0,
+      "min_y": 0.0,
+      "max_y": 1024.0
+    }
+  },
+  "gui_settings": {
+    "theme": "dark",
+    "auto_scroll": true
+  }
+}

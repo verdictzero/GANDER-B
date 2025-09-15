@@ -1,0 +1,490 @@
+{
+  "version": "1.0",
+  "timestamp": "2025-08-26T14:53:37.867Z",
+  "unity_project": "FENRIR",
+  "scene_name": "OptTest4",
+  "terrain_count": 16,
+  "boundaries": {
+    "min_x": -2048.0,
+    "max_x": 2048.0,
+    "min_z": -2048.0,
+    "max_z": 2048.0,
+    "min_y": 0.0,
+    "max_y": 1000.0,
+    "width": 4096.0,
+    "height": 4096.0,
+    "depth": 1000.0
+  },
+  "individual_terrains": [
+    {
+      "name": "Terrain_0_1-20250716 - 101052",
+      "position": {
+        "x": -2048.0,
+        "y": 0.0,
+        "z": -1024.0
+      },
+      "size": {
+        "x": 1024.0,
+        "y": 1000.0,
+        "z": 1024.0
+      },
+      "bounds": {
+        "min_x": -2048.0,
+        "max_x": -1024.0,
+        "min_z": -1024.0,
+        "max_z": 0.0,
+        "min_y": 0.0,
+        "max_y": 1000.0,
+        "width": 1024.0,
+        "height": 1024.0,
+        "depth": 1000.0
+      },
+      "heightmap_resolution": {
+        "x": 33,
+        "y": 33
+      },
+      "detail_resolution": 128
+    },
+    {
+      "name": "Terrain_1_2-20250716 - 101052",
+      "position": {
+        "x": -1024.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "size": {
+        "x": 1024.0,
+        "y": 1000.0,
+        "z": 1024.0
+      },
+      "bounds": {
+        "min_x": -1024.0,
+        "max_x": 0.0,
+        "min_z": 0.0,
+        "max_z": 1024.0,
+        "min_y": 0.0,
+        "max_y": 1000.0,
+        "width": 1024.0,
+        "height": 1024.0,
+        "depth": 1000.0
+      },
+      "heightmap_resolution": {
+        "x": 33,
+        "y": 33
+      },
+      "detail_resolution": 128
+    },
+    {
+      "name": "Terrain_1_3-20250716 - 101052",
+      "position": {
+        "x": -1024.0,
+        "y": 0.0,
+        "z": 1024.0
+      },
+      "size": {
+        "x": 1024.0,
+        "y": 1000.0,
+        "z": 1024.0
+      },
+      "bounds": {
+        "min_x": -1024.0,
+        "max_x": 0.0,
+        "min_z": 1024.0,
+        "max_z": 2048.0,
+        "min_y": 0.0,
+        "max_y": 1000.0,
+        "width": 1024.0,
+        "height": 1024.0,
+        "depth": 1000.0
+      },
+      "heightmap_resolution": {
+        "x": 33,
+        "y": 33
+      },
+      "detail_resolution": 128
+    },
+    {
+      "name": "Terrain_2_2-20250716 - 101052",
+      "position": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "size": {
+        "x": 1024.0,
+        "y": 1000.0,
+        "z": 1024.0
+      },
+      "bounds": {
+        "min_x": 0.0,
+        "max_x": 1024.0,
+        "min_z": 0.0,
+        "max_z": 1024.0,
+        "min_y": 0.0,
+        "max_y": 1000.0,
+        "width": 1024.0,
+        "height": 1024.0,
+        "depth": 1000.0
+      },
+      "heightmap_resolution": {
+        "x": 33,
+        "y": 33
+      },
+      "detail_resolution": 128
+    },
+    {
+      "name": "Terrain_0_3-20250716 - 101052",
+      "position": {
+        "x": -2048.0,
+        "y": 0.0,
+        "z": 1024.0
+      },
+      "size": {
+        "x": 1024.0,
+        "y": 1000.0,
+        "z": 1024.0
+      },
+      "bounds": {
+        "min_x": -2048.0,
+        "max_x": -1024.0,
+        "min_z": 1024.0,
+        "max_z": 2048.0,
+        "min_y": 0.0,
+        "max_y": 1000.0,
+        "width": 1024.0,
+        "height": 1024.0,
+        "depth": 1000.0
+      },
+      "heightmap_resolution": {
+        "x": 33,
+        "y": 33
+      },
+      "detail_resolution": 128
+    },
+    {
+      "name": "Terrain_2_0-20250716 - 101052",
+      "position": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": -2048.0
+      },
+      "size": {
+        "x": 1024.0,
+        "y": 1000.0,
+        "z": 1024.0
+      },
+      "bounds": {
+        "min_x": 0.0,
+        "max_x": 1024.0,
+        "min_z": -2048.0,
+        "max_z": -1024.0,
+        "min_y": 0.0,
+        "max_y": 1000.0,
+        "width": 1024.0,
+        "height": 1024.0,
+        "depth": 1000.0
+      },
+      "heightmap_resolution": {
+        "x": 33,
+        "y": 33
+      },
+      "detail_resolution": 128
+    },
+    {
+      "name": "Terrain_2_1-20250716 - 101052",
+      "position": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": -1024.0
+      },
+      "size": {
+        "x": 1024.0,
+        "y": 1000.0,
+        "z": 1024.0
+      },
+      "bounds": {
+        "min_x": 0.0,
+        "max_x": 1024.0,
+        "min_z": -1024.0,
+        "max_z": 0.0,
+        "min_y": 0.0,
+        "max_y": 1000.0,
+        "width": 1024.0,
+        "height": 1024.0,
+        "depth": 1000.0
+      },
+      "heightmap_resolution": {
+        "x": 33,
+        "y": 33
+      },
+      "detail_resolution": 128
+    },
+    {
+      "name": "Terrain_3_2-20250716 - 101052",
+      "position": {
+        "x": 1024.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "size": {
+        "x": 1024.0,
+        "y": 1000.0,
+        "z": 1024.0
+      },
+      "bounds": {
+        "min_x": 1024.0,
+        "max_x": 2048.0,
+        "min_z": 0.0,
+        "max_z": 1024.0,
+        "min_y": 0.0,
+        "max_y": 1000.0,
+        "width": 1024.0,
+        "height": 1024.0,
+        "depth": 1000.0
+      },
+      "heightmap_resolution": {
+        "x": 33,
+        "y": 33
+      },
+      "detail_resolution": 128
+    },
+    {
+      "name": "Terrain_3_3-20250716 - 101052",
+      "position": {
+        "x": 1024.0,
+        "y": 0.0,
+        "z": 1024.0
+      },
+      "size": {
+        "x": 1024.0,
+        "y": 1000.0,
+        "z": 1024.0
+      },
+      "bounds": {
+        "min_x": 1024.0,
+        "max_x": 2048.0,
+        "min_z": 1024.0,
+        "max_z": 2048.0,
+        "min_y": 0.0,
+        "max_y": 1000.0,
+        "width": 1024.0,
+        "height": 1024.0,
+        "depth": 1000.0
+      },
+      "heightmap_resolution": {
+        "x": 33,
+        "y": 33
+      },
+      "detail_resolution": 128
+    },
+    {
+      "name": "Terrain_1_1-20250716 - 101052",
+      "position": {
+        "x": -1024.0,
+        "y": 0.0,
+        "z": -1024.0
+      },
+      "size": {
+        "x": 1024.0,
+        "y": 1000.0,
+        "z": 1024.0
+      },
+      "bounds": {
+        "min_x": -1024.0,
+        "max_x": 0.0,
+        "min_z": -1024.0,
+        "max_z": 0.0,
+        "min_y": 0.0,
+        "max_y": 1000.0,
+        "width": 1024.0,
+        "height": 1024.0,
+        "depth": 1000.0
+      },
+      "heightmap_resolution": {
+        "x": 33,
+        "y": 33
+      },
+      "detail_resolution": 128
+    },
+    {
+      "name": "Terrain_0_0-20250716 - 101052",
+      "position": {
+        "x": -2048.0,
+        "y": 0.0,
+        "z": -2048.0
+      },
+      "size": {
+        "x": 1024.0,
+        "y": 1000.0,
+        "z": 1024.0
+      },
+      "bounds": {
+        "min_x": -2048.0,
+        "max_x": -1024.0,
+        "min_z": -2048.0,
+        "max_z": -1024.0,
+        "min_y": 0.0,
+        "max_y": 1000.0,
+        "width": 1024.0,
+        "height": 1024.0,
+        "depth": 1000.0
+      },
+      "heightmap_resolution": {
+        "x": 33,
+        "y": 33
+      },
+      "detail_resolution": 128
+    },
+    {
+      "name": "Terrain_3_1-20250716 - 101052",
+      "position": {
+        "x": 1024.0,
+        "y": 0.0,
+        "z": -1024.0
+      },
+      "size": {
+        "x": 1024.0,
+        "y": 1000.0,
+        "z": 1024.0
+      },
+      "bounds": {
+        "min_x": 1024.0,
+        "max_x": 2048.0,
+        "min_z": -1024.0,
+        "max_z": 0.0,
+        "min_y": 0.0,
+        "max_y": 1000.0,
+        "width": 1024.0,
+        "height": 1024.0,
+        "depth": 1000.0
+      },
+      "heightmap_resolution": {
+        "x": 33,
+        "y": 33
+      },
+      "detail_resolution": 128
+    },
+    {
+      "name": "Terrain_3_0-20250716 - 101052",
+      "position": {
+        "x": 1024.0,
+        "y": 0.0,
+        "z": -2048.0
+      },
+      "size": {
+        "x": 1024.0,
+        "y": 1000.0,
+        "z": 1024.0
+      },
+      "bounds": {
+        "min_x": 1024.0,
+        "max_x": 2048.0,
+        "min_z": -2048.0,
+        "max_z": -1024.0,
+        "min_y": 0.0,
+        "max_y": 1000.0,
+        "width": 1024.0,
+        "height": 1024.0,
+        "depth": 1000.0
+      },
+      "heightmap_resolution": {
+        "x": 33,
+        "y": 33
+      },
+      "detail_resolution": 128
+    },
+    {
+      "name": "Terrain_2_3-20250716 - 101052",
+      "position": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 1024.0
+      },
+      "size": {
+        "x": 1024.0,
+        "y": 1000.0,
+        "z": 1024.0
+      },
+      "bounds": {
+        "min_x": 0.0,
+        "max_x": 1024.0,
+        "min_z": 1024.0,
+        "max_z": 2048.0,
+        "min_y": 0.0,
+        "max_y": 1000.0,
+        "width": 1024.0,
+        "height": 1024.0,
+        "depth": 1000.0
+      },
+      "heightmap_resolution": {
+        "x": 33,
+        "y": 33
+      },
+      "detail_resolution": 128
+    },
+    {
+      "name": "Terrain_0_2-20250716 - 101052",
+      "position": {
+        "x": -2048.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "size": {
+        "x": 1024.0,
+        "y": 1000.0,
+        "z": 1024.0
+      },
+      "bounds": {
+        "min_x": -2048.0,
+        "max_x": -1024.0,
+        "min_z": 0.0,
+        "max_z": 1024.0,
+        "min_y": 0.0,
+        "max_y": 1000.0,
+        "width": 1024.0,
+        "height": 1024.0,
+        "depth": 1000.0
+      },
+      "heightmap_resolution": {
+        "x": 33,
+        "y": 33
+      },
+      "detail_resolution": 128
+    },
+    {
+      "name": "Terrain_1_0-20250716 - 101052",
+      "position": {
+        "x": -1024.0,
+        "y": 0.0,
+        "z": -2048.0
+      },
+      "size": {
+        "x": 1024.0,
+        "y": 1000.0,
+        "z": 1024.0
+      },
+      "bounds": {
+        "min_x": -1024.0,
+        "max_x": 0.0,
+        "min_z": -2048.0,
+        "max_z": -1024.0,
+        "min_y": 0.0,
+        "max_y": 1000.0,
+        "width": 1024.0,
+        "height": 1024.0,
+        "depth": 1000.0
+      },
+      "heightmap_resolution": {
+        "x": 33,
+        "y": 33
+      },
+      "detail_resolution": 128
+    }
+  ],
+  "export_settings": {
+    "coordinate_system": "Unity_LeftHanded",
+    "units": "meters",
+    "auto_export": true,
+    "export_interval": 5.0
+  }
+}

@@ -1,0 +1,521 @@
+{
+  "version": "1.0",
+  "metadata": {
+    "description": "Real-World Battlespace Entity Definitions",
+    "lastModified": "2025-06-26T10:00:00Z",
+    "author": "Battlespace Visualization System"
+  },
+  "dispositions": {
+    "colors": {
+      "FRIENDLY": {
+        "primary": {
+          "hex": "#00FF00",
+          "rgb": [0, 255, 0],
+          "rgba": [0, 255, 0, 255],
+          "unity_color": {"r": 0.0, "g": 1.0, "b": 0.0, "a": 1.0}
+        },
+        "secondary": {
+          "hex": "#66FF66",
+          "rgb": [102, 255, 102],
+          "rgba": [102, 255, 102, 255],
+          "unity_color": {"r": 0.4, "g": 1.0, "b": 0.4, "a": 1.0}
+        },
+        "gizmo": {
+          "hex": "#00CC00",
+          "rgb": [0, 204, 0],
+          "rgba": [0, 204, 0, 200],
+          "unity_color": {"r": 0.0, "g": 0.8, "b": 0.0, "a": 0.78}
+        }
+      },
+      "HOSTILE": {
+        "primary": {
+          "hex": "#FF0000",
+          "rgb": [255, 0, 0],
+          "rgba": [255, 0, 0, 255],
+          "unity_color": {"r": 1.0, "g": 0.0, "b": 0.0, "a": 1.0}
+        },
+        "secondary": {
+          "hex": "#FF6666",
+          "rgb": [255, 102, 102],
+          "rgba": [255, 102, 102, 255],
+          "unity_color": {"r": 1.0, "g": 0.4, "b": 0.4, "a": 1.0}
+        },
+        "gizmo": {
+          "hex": "#CC0000",
+          "rgb": [204, 0, 0],
+          "rgba": [204, 0, 0, 200],
+          "unity_color": {"r": 0.8, "g": 0.0, "b": 0.0, "a": 0.78}
+        }
+      },
+      "NEUTRAL": {
+        "primary": {
+          "hex": "#FFFF00",
+          "rgb": [255, 255, 0],
+          "rgba": [255, 255, 0, 255],
+          "unity_color": {"r": 1.0, "g": 1.0, "b": 0.0, "a": 1.0}
+        },
+        "secondary": {
+          "hex": "#FFFF66",
+          "rgb": [255, 255, 102],
+          "rgba": [255, 255, 102, 255],
+          "unity_color": {"r": 1.0, "g": 1.0, "b": 0.4, "a": 1.0}
+        },
+        "gizmo": {
+          "hex": "#CCCC00",
+          "rgb": [204, 204, 0],
+          "rgba": [204, 204, 0, 200],
+          "unity_color": {"r": 0.8, "g": 0.8, "b": 0.0, "a": 0.78}
+        }
+      },
+      "UNKNOWN": {
+        "primary": {
+          "hex": "#FFFFFF",
+          "rgb": [255, 255, 255],
+          "rgba": [255, 255, 255, 255],
+          "unity_color": {"r": 1.0, "g": 1.0, "b": 1.0, "a": 1.0}
+        },
+        "secondary": {
+          "hex": "#CCCCCC",
+          "rgb": [204, 204, 204],
+          "rgba": [204, 204, 204, 255],
+          "unity_color": {"r": 0.8, "g": 0.8, "b": 0.8, "a": 1.0}
+        },
+        "gizmo": {
+          "hex": "#999999",
+          "rgb": [153, 153, 153],
+          "rgba": [153, 153, 153, 200],
+          "unity_color": {"r": 0.6, "g": 0.6, "b": 0.6, "a": 0.78}
+        }
+      }
+    },
+    "symbols": {
+      "FRIENDLY": "F",
+      "HOSTILE": "H",
+      "NEUTRAL": "N",
+      "UNKNOWN": "U"
+    }
+  },
+  "entity_categories": {
+    "AIR": {
+      "description": "Aerial vehicles and aircraft",
+      "default_altitude": 500.0,
+      "movement_layer": "air_space"
+    },
+    "GROUND": {
+      "description": "Ground-based vehicles and personnel",
+      "default_altitude": 0.0,
+      "movement_layer": "terrain_surface"
+    },
+    "ANOMALOUS": {
+      "description": "Unknown or anomalous entities",
+      "default_altitude": 1000.0,
+      "movement_layer": "air_space"
+    }
+  },
+  "entities": [
+    {
+      "id": "SU57",
+      "name": "SU-57_Felon",
+      "description": "Russian 5th generation stealth fighter",
+      "category": "AIR",
+      "subcategory": "FIGHTER",
+      "specification": "STEALTH_MULTIROLE",
+      "model": "SU-57 Felon",
+      "nato_symbol": "SHFAMH----",
+      "kinematics": {
+        "minSpeed": 65.0,
+        "maxSpeed": 680.0,
+        "cruiseSpeed": 410.0,
+        "acceleration": 35.0,
+        "deceleration": 45.0,
+        "turnRate": 55.0,
+        "climbRate": 350.0,
+        "defaultAltitude": 15000.0,
+        "minAltitude": 100.0,
+        "maxAltitude": 20000.0,
+        "movement_type": "3D_FLIGHT"
+      },
+      "disposition_types": ["HOSTILE"],
+      "simulation_parameters": {
+        "spawn_probability": 0.08,
+        "max_concurrent": 4,
+        "default_heading_variance": 360.0,
+        "patrol_behavior": "RANDOM_WAYPOINT"
+      }
+    },
+    {
+      "id": "MIG25",
+      "name": "MIG-25_Foxbat",
+      "description": "Russian interceptor aircraft",
+      "category": "AIR",
+      "subcategory": "INTERCEPTOR",
+      "specification": "HIGH_SPEED",
+      "model": "MIG-25 Foxbat",
+      "nato_symbol": "SHFAMI----",
+      "kinematics": {
+        "minSpeed": 80.0,
+        "maxSpeed": 950.0,
+        "cruiseSpeed": 270.0,
+        "acceleration": 25.0,
+        "deceleration": 35.0,
+        "turnRate": 30.0,
+        "climbRate": 250.0,
+        "defaultAltitude": 20000.0,
+        "minAltitude": 500.0,
+        "maxAltitude": 25000.0,
+        "movement_type": "3D_FLIGHT"
+      },
+      "disposition_types": ["HOSTILE"],
+      "simulation_parameters": {
+        "spawn_probability": 0.10,
+        "max_concurrent": 6,
+        "default_heading_variance": 360.0,
+        "patrol_behavior": "RANDOM_WAYPOINT"
+      }
+    },
+    {
+      "id": "SU35",
+      "name": "SU-35_Flanker",
+      "description": "Russian 4++ generation air superiority fighter",
+      "category": "AIR",
+      "subcategory": "FIGHTER",
+      "specification": "AIR_SUPERIORITY",
+      "model": "SU-35 Flanker",
+      "nato_symbol": "SHFAMF----",
+      "kinematics": {
+        "minSpeed": 60.0,
+        "maxSpeed": 765.0,
+        "cruiseSpeed": 375.0,
+        "acceleration": 40.0,
+        "deceleration": 50.0,
+        "turnRate": 65.0,
+        "climbRate": 280.0,
+        "defaultAltitude": 12000.0,
+        "minAltitude": 100.0,
+        "maxAltitude": 18000.0,
+        "movement_type": "3D_FLIGHT"
+      },
+      "disposition_types": ["HOSTILE"],
+      "simulation_parameters": {
+        "spawn_probability": 0.12,
+        "max_concurrent": 8,
+        "default_heading_variance": 360.0,
+        "patrol_behavior": "RANDOM_WAYPOINT"
+      }
+    },
+    {
+      "id": "MI24",
+      "name": "MI-24_Hind",
+      "description": "Russian attack helicopter",
+      "category": "AIR",
+      "subcategory": "HELICOPTER",
+      "specification": "ATTACK_TRANSPORT",
+      "model": "MI-24 Hind",
+      "nato_symbol": "SHFWAH----",
+      "kinematics": {
+        "minSpeed": 0.0,
+        "maxSpeed": 93.0,
+        "cruiseSpeed": 75.0,
+        "acceleration": 8.0,
+        "deceleration": 12.0,
+        "turnRate": 120.0,
+        "climbRate": 12.5,
+        "defaultAltitude": 100.0,
+        "minAltitude": 10.0,
+        "maxAltitude": 5000.0,
+        "movement_type": "3D_ROTORCRAFT"
+      },
+      "disposition_types": ["HOSTILE"],
+      "simulation_parameters": {
+        "spawn_probability": 0.20,
+        "max_concurrent": 12,
+        "default_heading_variance": 360.0,
+        "patrol_behavior": "AREA_SWEEP"
+      }
+    },
+    {
+      "id": "T90",
+      "name": "T-90",
+      "description": "Russian main battle tank",
+      "category": "GROUND",
+      "subcategory": "VEHICLE",
+      "specification": "TRACKED_MBT",
+      "model": "T-90",
+      "nato_symbol": "SHGPCATW--",
+      "kinematics": {
+        "minSpeed": 0.0,
+        "maxSpeed": 18.0,
+        "cruiseSpeed": 11.0,
+        "acceleration": 2.5,
+        "deceleration": 4.0,
+        "turnRate": 30.0,
+        "movement_type": "GROUND_TRACKED"
+      },
+      "disposition_types": ["HOSTILE"],
+      "simulation_parameters": {
+        "spawn_probability": 0.25,
+        "max_concurrent": 20,
+        "default_heading_variance": 360.0,
+        "patrol_behavior": "ROAD_FOLLOWING"
+      }
+    },
+    {
+      "id": "T72",
+      "name": "T-72",
+      "description": "Russian main battle tank",
+      "category": "GROUND",
+      "subcategory": "VEHICLE",
+      "specification": "TRACKED_MBT",
+      "model": "T-72",
+      "nato_symbol": "SHGPCATW--",
+      "kinematics": {
+        "minSpeed": 0.0,
+        "maxSpeed": 16.5,
+        "cruiseSpeed": 10.0,
+        "acceleration": 2.0,
+        "deceleration": 3.5,
+        "turnRate": 28.0,
+        "movement_type": "GROUND_TRACKED"
+      },
+      "disposition_types": ["HOSTILE"],
+      "simulation_parameters": {
+        "spawn_probability": 0.30,
+        "max_concurrent": 25,
+        "default_heading_variance": 360.0,
+        "patrol_behavior": "ROAD_FOLLOWING"
+      }
+    },
+    {
+      "id": "F15",
+      "name": "F-15_Eagle",
+      "description": "American air superiority fighter",
+      "category": "AIR",
+      "subcategory": "FIGHTER",
+      "specification": "AIR_SUPERIORITY",
+      "model": "F-15 Eagle",
+      "nato_symbol": "SFAPMF----",
+      "kinematics": {
+        "minSpeed": 70.0,
+        "maxSpeed": 850.0,
+        "cruiseSpeed": 305.0,
+        "acceleration": 45.0,
+        "deceleration": 55.0,
+        "turnRate": 60.0,
+        "climbRate": 315.0,
+        "defaultAltitude": 13000.0,
+        "minAltitude": 100.0,
+        "maxAltitude": 19000.0,
+        "movement_type": "3D_FLIGHT"
+      },
+      "disposition_types": ["FRIENDLY"],
+      "simulation_parameters": {
+        "spawn_probability": 0.12,
+        "max_concurrent": 8,
+        "default_heading_variance": 360.0,
+        "patrol_behavior": "RANDOM_WAYPOINT"
+      }
+    },
+    {
+      "id": "F16",
+      "name": "F-16_Viper",
+      "description": "American multirole fighter",
+      "category": "AIR",
+      "subcategory": "FIGHTER",
+      "specification": "MULTIROLE",
+      "model": "F-16 Viper",
+      "nato_symbol": "SFAPMF----",
+      "kinematics": {
+        "minSpeed": 55.0,
+        "maxSpeed": 680.0,
+        "cruiseSpeed": 270.0,
+        "acceleration": 38.0,
+        "deceleration": 48.0,
+        "turnRate": 70.0,
+        "climbRate": 280.0,
+        "defaultAltitude": 10000.0,
+        "minAltitude": 100.0,
+        "maxAltitude": 15000.0,
+        "movement_type": "3D_FLIGHT"
+      },
+      "disposition_types": ["FRIENDLY"],
+      "simulation_parameters": {
+        "spawn_probability": 0.15,
+        "max_concurrent": 12,
+        "default_heading_variance": 360.0,
+        "patrol_behavior": "RANDOM_WAYPOINT"
+      }
+    },
+    {
+      "id": "F35",
+      "name": "F-35_Lightning_II",
+      "description": "American 5th generation stealth multirole fighter",
+      "category": "AIR",
+      "subcategory": "FIGHTER",
+      "specification": "STEALTH_MULTIROLE",
+      "model": "F-35 Lightning II",
+      "nato_symbol": "SFAPMH----",
+      "kinematics": {
+        "minSpeed": 50.0,
+        "maxSpeed": 545.0,
+        "cruiseSpeed": 270.0,
+        "acceleration": 30.0,
+        "deceleration": 40.0,
+        "turnRate": 50.0,
+        "climbRate": 260.0,
+        "defaultAltitude": 11000.0,
+        "minAltitude": 100.0,
+        "maxAltitude": 16000.0,
+        "movement_type": "3D_FLIGHT"
+      },
+      "disposition_types": ["FRIENDLY"],
+      "simulation_parameters": {
+        "spawn_probability": 0.10,
+        "max_concurrent": 6,
+        "default_heading_variance": 360.0,
+        "patrol_behavior": "RANDOM_WAYPOINT"
+      }
+    },
+    {
+      "id": "QZX80",
+      "name": "QZX-80_Cilantro_Coupe",
+      "description": "Experimental stealth reconnaissance aircraft",
+      "category": "AIR",
+      "subcategory": "RECONNAISSANCE",
+      "specification": "EXPERIMENTAL_STEALTH",
+      "model": "QZX-80 Cilantro Coupe",
+      "nato_symbol": "SFAPMR----",
+      "kinematics": {
+        "minSpeed": 40.0,
+        "maxSpeed": 420.0,
+        "cruiseSpeed": 320.0,
+        "acceleration": 22.0,
+        "deceleration": 30.0,
+        "turnRate": 45.0,
+        "climbRate": 200.0,
+        "defaultAltitude": 18000.0,
+        "minAltitude": 1000.0,
+        "maxAltitude": 22000.0,
+        "movement_type": "3D_FLIGHT"
+      },
+      "disposition_types": ["FRIENDLY"],
+      "simulation_parameters": {
+        "spawn_probability": 0.03,
+        "max_concurrent": 2,
+        "default_heading_variance": 360.0,
+        "patrol_behavior": "PERIMETER_SCOUT"
+      }
+    },
+    {
+      "id": "M1A2",
+      "name": "M1A2_Abrams",
+      "description": "American main battle tank",
+      "category": "GROUND",
+      "subcategory": "VEHICLE",
+      "specification": "TRACKED_MBT",
+      "model": "M1A2 Abrams",
+      "nato_symbol": "SFGPCATW--",
+      "kinematics": {
+        "minSpeed": 0.0,
+        "maxSpeed": 19.0,
+        "cruiseSpeed": 12.0,
+        "acceleration": 3.0,
+        "deceleration": 5.0,
+        "turnRate": 32.0,
+        "movement_type": "GROUND_TRACKED"
+      },
+      "disposition_types": ["FRIENDLY"],
+      "simulation_parameters": {
+        "spawn_probability": 0.20,
+        "max_concurrent": 15,
+        "default_heading_variance": 360.0,
+        "patrol_behavior": "ROAD_FOLLOWING"
+      }
+    },
+    {
+      "id": "UAP",
+      "name": "Unidentified Anomalous Phenomena",
+      "description": "Unidentified exotic technology",
+      "category": "AIR",
+      "subcategory": "UNKNOWN",
+      "specification": "UNIDENTIFIED",
+      "model": "UAP",
+      "nato_symbol": "SUPPS-----",
+      "kinematics": {
+        "minSpeed": 0.0,
+        "maxSpeed": 2000.0,
+        "cruiseSpeed": 500.0,
+        "acceleration": 200.0,
+        "deceleration": 200.0,
+        "turnRate": 180.0,
+        "climbRate": 1000.0,
+        "defaultAltitude": 5000.0,
+        "minAltitude": 0.0,
+        "maxAltitude": 30000.0,
+        "movement_type": "3D_FLIGHT"
+      },
+      "disposition_types": ["UNKNOWN"],
+      "simulation_parameters": {
+        "spawn_probability": 0.02,
+        "max_concurrent": 1,
+        "default_heading_variance": 360.0,
+        "patrol_behavior": "RANDOM_WAYPOINT"
+      }
+    },
+    {
+      "id": "UNK",
+      "name": "Unknown",
+      "description": "Generic unknown entity",
+      "category": "AIR",
+      "subcategory": "UNKNOWN",
+      "specification": "UNIDENTIFIED",
+      "model": "Unknown",
+      "nato_symbol": "SUPPS-----",
+      "kinematics": {
+        "minSpeed": 20.0,
+        "maxSpeed": 300.0,
+        "cruiseSpeed": 150.0,
+        "acceleration": 15.0,
+        "deceleration": 20.0,
+        "turnRate": 40.0,
+        "climbRate": 50.0,
+        "defaultAltitude": 3000.0,
+        "minAltitude": 100.0,
+        "maxAltitude": 10000.0,
+        "movement_type": "3D_FLIGHT"
+      },
+      "disposition_types": ["UNKNOWN"],
+      "simulation_parameters": {
+        "spawn_probability": 0.05,
+        "max_concurrent": 3,
+        "default_heading_variance": 360.0,
+        "patrol_behavior": "RANDOM_WAYPOINT"
+      }
+    },
+    {
+      "id": "CIV",
+      "name": "Civilian Truck",
+      "description": "Standard civilian cargo vehicle",
+      "category": "GROUND",
+      "subcategory": "VEHICLE",
+      "specification": "WHEELED_TRUCK",
+      "model": "Civilian Truck",
+      "nato_symbol": "SUGPUCTH--",
+      "kinematics": {
+        "minSpeed": 0.0,
+        "maxSpeed": 22.0,
+        "cruiseSpeed": 15.0,
+        "acceleration": 2.0,
+        "deceleration": 3.0,
+        "turnRate": 40.0,
+        "movement_type": "GROUND_WHEELED"
+      },
+      "disposition_types": ["NEUTRAL"],
+      "simulation_parameters": {
+        "spawn_probability": 0.40,
+        "max_concurrent": 30,
+        "default_heading_variance": 360.0,
+        "patrol_behavior": "ROAD_FOLLOWING"
+      }
+    }
+  ]
+}

@@ -1,0 +1,4 @@
+pyzmq>=22.0.0
+psutil>=5.8.0
+colorama>=0.4.4
+pyinstaller>=5.0
